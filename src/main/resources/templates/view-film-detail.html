@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TP ENI</title>
+    <link rel="stylesheet" th:href="@{/css/general.css}">
+    <link rel="stylesheet" th:href="@{/css/tp-form.css}">
+    <link rel="icon" th:href="@{/images/logoENI.png}">
+</head>
+<body>
+<!-- Navbar -->
+<header>
+    <h1 id="nav-title">
+        <a th:href="@{/}">Filmothèque</a>
+    </h1>
+    <nav>
+        <ul>
+            <li><a th:href="@{/films}">Films</a></li>
+            <li><a th:href="@{/films/creer}">Creer</a></li>
+        </ul>
+    </nav>
+</header>
+<main>
+
+
+    <form>
+        <h1>Détail du film</h1>
+        <ul class="flex-outer">
+            <li>
+                <label for="inputGenre">Genre : </label>
+                <input type="text" id="inputGenre" disabled th:value="${film.genre.titre}" /></li>
+            <li>
+                <label for="inputYear">Année : </label>
+                <input type="text" id="inputYear" disabled th:value="${film.annee}"/></li>
+            <li>
+                <label for="inputTitle">Titre : </label>
+                <input type="text" id="inputTitle" disabled th:value="${film.titre}"/></li>
+            <li>
+                <label for="inputDirector">Réalisateur : </label>
+                <input  type="text" id="inputDirector" disabled th:value="${film.realisateur.prenom + ' ' + film.realisateur.nom}" />
+            </li>
+            <li>
+                <label for="inputDuration">Durée : </label>
+                <input type="number" id="inputDuration" disabled th:value="${film.duree}"/></li>
+            <li>
+                <label for="selectActors">Acteur(s) : </label>
+                <select id="selectActors" disabled multiple="multiple">
+                    <option th:each="a : ${film.acteurs}" th:text="${'- ' + a.prenom + ' ' + a.nom}"> </option>
+                </select>
+            </li>
+            <li>
+                <label for="taSynopsis">Synopsis : </label>
+                <textarea id="taSynopsis" disabled rows="3" th:text="${film.synopsis}">
+				</textarea>
+            </li>
+        </ul>
+    </form>
+
+</main>
+
+</body>
+</html>

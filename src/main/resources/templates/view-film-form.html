@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TP ENI</title>
+    <link rel="stylesheet" th:href="@{/css/general.css}">
+    <link rel="stylesheet" th:href="@{/css/tp-form.css}">
+    <link rel="icon" th:href="@{/images/logoENI.png}">
+</head>
+<body>
+<!-- Navbar -->
+<header>
+    <h1 id="nav-title">
+        <a th:href="@{/}">Filmothèque</a>
+    </h1>
+    <nav>
+        <ul>
+            <li><a th:href="@{/films}">Films</a></li>
+            <li><a th:href="@{/films/creer}">Creer</a></li>
+        </ul>
+    </nav>
+</header>
+<main>
+
+    <form action="/films/creer" method="post" th:object="${film}">
+        <h1>Création d'un film [En cours de construction]</h1>
+
+        <div style="color: red;" th:if="${#fields.hasErrors('*')}" >
+            <p th:text="#{index.erreurs}">Message d'erreur</p>
+        </div>
+
+        <ul class="flex-outer">
+            <li>
+                <label for="inputTitre">Titre : </label>
+                <input type="text" id="inputTitre" th:field="*{titre}">
+            </li>
+            <span style="color: red;" th:if="${#fields.hasErrors('titre')}">
+		        <li th:each="erreur: ${#fields.errors('titre')}" th:text="${erreur}"></li>
+	        </span>
+            <li>
+                <label for="inputAnnee">Année : </label>
+                <input type="number" id="inputAnnee" th:field="*{annee}">
+            </li>
+            <span style="color: red;" th:if="${#fields.hasErrors('annee')}">
+		        <li th:each="erreur: ${#fields.errors('annee')}" th:text="${erreur}"></li>
+	        </span>
+            <li>
+                <label for="inputDuree">Durée : </label>
+                <input type="number" id="inputDuree" th:field="*{duree}">
+            </li>
+
+            <li>
+                <label for="inputSynopsis">Synopsis : </label>
+                <input type="text" id="inputSynopsis" th:field="*{synopsis}">
+            </li>
+            <span style="color: red;" th:if="${#fields.hasErrors('synopsis')}">
+		        <li th:each="erreur: ${#fields.errors('synopsis')}" th:text="${erreur}"></li>
+	        </span>
+
+            <li>
+                <label for="inputGenre">Genre : </label>
+                <select id="inputGenre" th:field="*{idGenre}">
+                    <option value="">-- Choisir un genre --</option>
+                    <!--ICI ON RECUPERE LES INFORMATIONS DIRECTEMENT DANS LE SERVICE AU LIEU DU CONTROLLER-->
+                    <option th:each="genre : ${@filmService.consulterGenres()}"
+                            th:value="${genre.id}"
+                            th:text="${genre.titre}">
+                    </option>
+                </select>
+            </li>
+            <li>
+                <label for="inputRealisateur">Réalisateur : </label>
+                <select id="inputRealisateur" th:field="*{idRealisateur}">
+                    <option value="">-- Choisir un réalisateur --</option>
+                    <!--ICI ON RECUPERE LES INFORMATIONS DIRECTEMENT DANS LE SERVICE AU LIEU DU CONTROLLER-->
+                    <option th:each="realisateur : ${@filmService.consulterParticipants()}"
+                            th:value="${realisateur.id}"
+                            th:text="${realisateur.prenom + ' ' + realisateur.nom}">
+                    </option>
+                </select>
+            </li>
+            <!--AFFICHAGE DES ACTEURS SELECTIONNES-->
+            <li>
+                <label for="idActeurs">Acteurs</label>
+                <!--AJOUTER LE FIELD idsActeurs (Lie le select à la liste d'IDs)-->
+                <select id="idActeurs" th:field = "*{idsActeurs}" multiple>
+                    <option th:each="acteur : ${@filmService.consulterParticipants()}"
+                            th:value="${acteur.id}"
+                            th:text="${acteur.prenom + ' ' + acteur.nom}"></option>
+                </select>
+            </li>
+
+        </ul>
+        <button type="submit">Valider</button>
+    </form>
+
+</main>
+
+</body>
+</html>
