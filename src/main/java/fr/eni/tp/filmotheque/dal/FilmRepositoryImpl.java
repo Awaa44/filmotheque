@@ -3,6 +3,8 @@ package fr.eni.tp.filmotheque.dal;
 import fr.eni.tp.filmotheque.bo.Film;
 import fr.eni.tp.filmotheque.bo.Genre;
 import fr.eni.tp.filmotheque.bo.Participant;
+import fr.eni.tp.filmotheque.exception.FilmNotFound;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -44,8 +46,39 @@ public class FilmRepositoryImpl implements FilmRepository {
         return films;
     }
 
+    @Override
+    public Film findFilmById(int id) {
+        String sql = "SELECT " +
+                "f.id, f.titre, f.annee, f.duree, f.synopsis, " +
+                "g.id AS genre_id, g.libelle AS genre_libelle, " +
+                "p.id AS real_id, p.prenom AS real_prenom, p.nom AS real_nom " +
+                "FROM films f " +
+                "INNER JOIN genres g ON f.genreId = g.id " +
+                "INNER JOIN participants p ON f.realisateurId = p.id WHERE f.id = ?";
+
+        Film film = null;
+
+        try {
+            film = jdbcTemplate.queryForObject(sql, new FilmCompletRowMapper(), id);
+        } catch (EmptyResultDataAccessException ex) {
+            throw new FilmNotFound();
+        }
+
+        //récupérer les acteurs pour chaque film avec un for via la méthode privée findActeursByFilmId
+        List<Participant> acteurs = findActeursByFilmId(film.getId());
+        film.setActeurs(acteurs);
+
+        return film;
+    }
+
+    @Override
+    public Film saveFilm(Film film) {
+        return null;
+    }
+
+
     //méthode privée pour trouver la liste des acteurs
-    private List<Participant> findActeursByFilmId(long filmId) {
+    private List<Participant> findActeursByFilmId(int filmId) {
         String sql = "SELECT p.id, p.prenom, p.nom " +
                 "FROM participants p " +
                 "INNER JOIN acteurs a ON p.id = a.participantId " +
@@ -53,6 +86,10 @@ public class FilmRepositoryImpl implements FilmRepository {
 
         return jdbcTemplate.query(sql, new ParticipantRowMapper(), filmId);
     }
+
+
+
+
 
     //construction du RowMapper pour afficher les films
     class FilmCompletRowMapper implements RowMapper<Film> {
@@ -95,5 +132,7 @@ public class FilmRepositoryImpl implements FilmRepository {
 
         }
     }
+
+
 
 }

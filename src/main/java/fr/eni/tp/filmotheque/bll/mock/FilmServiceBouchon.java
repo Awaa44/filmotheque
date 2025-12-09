@@ -34,7 +34,7 @@ public class FilmServiceBouchon implements FilmService {
 	 * @return null si inconnu
 	 */
     @Override
-    public Film consulterFilmParId(long id) {
+    public Film consulterFilmParId(int id) {
 		return lstFilms.stream().filter(item -> item.getId() == id).findAny().orElse(null);
 	}
 
@@ -58,7 +58,7 @@ public class FilmServiceBouchon implements FilmService {
 	 * @return null si inconnu
 	 */
     @Override
-    public Participant consulterParticipantParId(long id) {
+    public Participant consulterParticipantParId(int id) {
 		return lstParticipants.stream().filter(item -> item.getId() == id).findAny().orElse(null);
 	}
 

@@ -48,4 +48,22 @@ public class FilmServiceImplTest {
         assertNotNull(films);
         assertEquals(4, films.size());
     }
+
+    @Test
+    @DisplayName("afficher un film par id")
+    public void consulterFilmParId(){
+        //Arrange
+        int id = 1;
+
+        //Act
+        Film film = filmService.consulterFilmParId(id);
+
+        //Assert
+        assertNotNull(film);
+        assertEquals(id, film.getId());
+        assertEquals("Jurassic Park",  film.getTitre());
+
+    }
+
+
 }

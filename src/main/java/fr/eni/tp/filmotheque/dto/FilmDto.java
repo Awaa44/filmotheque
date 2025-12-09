@@ -20,17 +20,17 @@ public class FilmDto {
     @NotNull
     private String synopsis;
 
-    private Long idGenre;
+    private Integer idGenre;
 
-    private Long idRealisateur;
+    private Integer idRealisateur;
 
-    private List<Long> idsActeurs;
+    private List<Integer> idsActeurs;
 
     public FilmDto() {
         this.idsActeurs = new ArrayList<>();
     }
 
-    public FilmDto(String titre, Integer annee, Integer duree, String synopsis, Long idGenre, Long idRealisateur) {
+    public FilmDto(String titre, Integer annee, Integer duree, String synopsis, Integer idGenre, Integer idRealisateur) {
         this.titre = titre;
         this.annee = annee;
         this.duree = duree;
@@ -95,27 +95,27 @@ public class FilmDto {
         this.synopsis = synopsis;
     }
 
-    public Long getIdGenre() {
+    public int getIdGenre() {
         return idGenre;
     }
 
-    public void setIdGenre(Long idGenre) {
+    public void setIdGenre(int idGenre) {
         this.idGenre = idGenre;
     }
 
-    public Long getIdRealisateur() {
+    public int getIdRealisateur() {
         return idRealisateur;
     }
 
-    public void setIdRealisateur(Long idRealisateur) {
+    public void setIdRealisateur(int idRealisateur) {
         this.idRealisateur = idRealisateur;
     }
 
-    public List<Long> getIdsActeurs() {
+    public List<Integer> getIdsActeurs() {
         return idsActeurs;
     }
 
-    public void setIdsActeurs(List<Long> idsActeurs) {
+    public void setIdsActeurs(List<Integer> idsActeurs) {
         this.idsActeurs = idsActeurs;
     }
 }

@@ -7,7 +7,7 @@ public class Avis implements Serializable {/**
 	 * Numéro de sérialisation
 	 */
 	private static final long serialVersionUID = 1L;
-	private long id;
+	private int id;
 	private int note;
 	private String commentaire;
 	private Membre membre;
@@ -21,18 +21,18 @@ public class Avis implements Serializable {/**
 		this.membre = membre;
 	}
 
-	public Avis(long id, int note, String commentaire, Membre membre) {
+	public Avis(int id, int note, String commentaire, Membre membre) {
 		this.id = id;
 		this.note = note;
 		this.commentaire = commentaire;
 		this.membre = membre;
 	}
 
-	public long getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 

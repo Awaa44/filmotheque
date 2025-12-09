@@ -55,5 +55,21 @@ public class FilmRepositoryImplTest {
         assertEquals(4, films.size());
     }
 
+    @Test
+    @DisplayName("test findFilmById")
+    public void findFilmById() {
+        //Arrange
+        int id = 1;
+
+        //act
+        Film film = filmRepository.findFilmById(id);
+
+        //Act
+        assertNotNull(film);
+        assertEquals(id, film.getId());
+        assertEquals("Jurassic Park", film.getTitre());
+
+    }
+
 
 }

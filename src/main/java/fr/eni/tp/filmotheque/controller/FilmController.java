@@ -29,7 +29,7 @@ public class FilmController {
 
 
     @GetMapping("/films/detail")
-    public String afficherUnFilm(@RequestParam(name="id") long identifiant, Model model) {
+    public String afficherUnFilm(@RequestParam(name="id") int identifiant, Model model) {
 
         Film film = this.filmService.consulterFilmParId(identifiant);
         System.out.println(film);
@@ -96,7 +96,7 @@ public class FilmController {
         //gestion d'une liste d'acteur, donc il faut lier seulement les acteurs sélectionnés dans le html
         List<Participant> acteurs = new ArrayList<>();
         if(filmDto.getIdsActeurs() != null && !filmDto.getIdsActeurs().isEmpty()) {
-            for (Long idActeur : filmDto.getIdsActeurs()) {
+            for (Integer idActeur : filmDto.getIdsActeurs()) {
                 Participant acteur = filmService.consulterParticipantParId(idActeur);
                 if(acteur != null) {
                     acteurs.add(acteur);

@@ -64,7 +64,7 @@ public class GenreRepositoryImplTest {
         //Arrange
         int id = 1;
 
-        //Assert : fonctin pour trouver le genre
+        //Assert : fonction pour trouver le genre
         Genre genre = genreRepository.findGenreById(id);
 
         //Act

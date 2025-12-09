@@ -35,7 +35,7 @@ public class GenreRepositoryImpl implements GenreRepository {
 
     //fonction pour trouver 1 résulat, donc on utilise queryForObject
     @Override
-    public Genre findGenreById(long id) {
+    public Genre findGenreById(int id) {
         String sql = "SELECT id, libelle FROM genres WHERE id = ?";
 
         Genre genre = null;

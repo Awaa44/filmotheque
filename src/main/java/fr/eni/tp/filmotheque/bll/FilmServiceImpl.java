@@ -24,8 +24,9 @@ public class FilmServiceImpl  implements FilmService {
     }
 
     @Override
-    public Film consulterFilmParId(long id) {
-        return null;
+    public Film consulterFilmParId(int id) {
+       Film film = filmRepository.findFilmById(id);
+       return film;
     }
 
     @Override
@@ -34,7 +35,7 @@ public class FilmServiceImpl  implements FilmService {
     }
 
     @Override
-    public Participant consulterParticipantParId(long id) {
+    public Participant consulterParticipantParId(int id) {
         return null;
     }
 

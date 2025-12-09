@@ -10,9 +10,10 @@ public interface FilmRepository {
     List<Film> findAllFilms();
 
     //trouver un film par id
-    //Film filmById(long id);
+    Film findFilmById(int id);
 
     //ajouter un film
+    Film saveFilm(Film film);
 
 
 }

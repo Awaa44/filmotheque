@@ -8,7 +8,7 @@ public interface GenreService {
 
     List<Genre> findAllGenre();
 
-    Genre findGenreById(long id);
+    Genre findGenreById(int id);
 
     Genre saveGenre(Genre genre);
 
