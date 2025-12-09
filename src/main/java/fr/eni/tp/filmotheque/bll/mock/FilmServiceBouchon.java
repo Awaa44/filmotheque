@@ -1,16 +1,11 @@
 package fr.eni.tp.filmotheque.bll.mock;
 
+import fr.eni.tp.filmotheque.bll.FilmService;
+import fr.eni.tp.filmotheque.bo.*;
+import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.List;
-
-
-import fr.eni.tp.filmotheque.bll.FilmService;
-import fr.eni.tp.filmotheque.bo.Avis;
-import fr.eni.tp.filmotheque.bo.Film;
-import fr.eni.tp.filmotheque.bo.Genre;
-import fr.eni.tp.filmotheque.bo.Membre;
-import fr.eni.tp.filmotheque.bo.Participant;
-import org.springframework.stereotype.Service;
 
 @Service("filmService")
 public class FilmServiceBouchon implements FilmService {
@@ -43,20 +38,20 @@ public class FilmServiceBouchon implements FilmService {
 		return lstFilms.stream().filter(item -> item.getId() == id).findAny().orElse(null);
 	}
 
-	@Override
+	/*@Override
     public List<Genre> consulterGenres() {
 		return lstGenres;
-	}
+	}*/
 
 	@Override
     public List<Participant> consulterParticipants() {
 		return lstParticipants;
 	}
 
-	@Override
+	/*@Override
     public Genre consulterGenreParId(long id) {
 		return lstGenres.stream().filter(item -> item.getId() == id).findAny().orElse(null);
-	}
+	}*/
 
 	/**
 	 * @return participant si id correspond

@@ -2,16 +2,17 @@ package fr.eni.tp.filmotheque.controller;
 
 import fr.eni.tp.filmotheque.bll.FilmService;
 import fr.eni.tp.filmotheque.bo.Film;
-import fr.eni.tp.filmotheque.bo.Genre;
 import fr.eni.tp.filmotheque.bo.Participant;
 import fr.eni.tp.filmotheque.dto.FilmDto;
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
@@ -84,8 +85,9 @@ public class FilmController {
         //on ne peut pas utiliser BeanUtils car le nom de l'attribut dans le DTO est différent de celui
         //qui est dans Genre, donc on passe en paramère le genre choisi / La méthode cherche dans la liste
         // de tous les genres disponibles / Elle retourne le genre complet qui correspond à cet ID
-        Genre genre = filmService.consulterGenreParId(filmDto.getIdGenre());
-        film.setGenre(genre);
+
+/*        Genre genre = filmService.consulterGenreParId(filmDto.getIdGenre());
+        film.setGenre(genre);*/
 
         //associer le réalisteur
         Participant participant = filmService.consulterParticipantParId(filmDto.getIdRealisateur());

@@ -10,7 +10,7 @@ public interface GenreRepository {
     List<Genre> findAllGenres();
 
     //trouver un genre via id
-    Genre findGenreById(int id);
+    Genre findGenreById(long id);
 
     //ajouter un genre
     Genre saveGenre(Genre genre);
