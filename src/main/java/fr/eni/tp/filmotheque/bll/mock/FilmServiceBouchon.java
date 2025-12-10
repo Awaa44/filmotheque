@@ -1,4 +1,4 @@
-package fr.eni.tp.filmotheque.bll.mock;
+/*package fr.eni.tp.filmotheque.bll.mock;
 
 import fr.eni.tp.filmotheque.bll.FilmService;
 import fr.eni.tp.filmotheque.bo.*;
@@ -29,34 +29,34 @@ public class FilmServiceBouchon implements FilmService {
 		return lstFilms;
 	}
 
-	/**
+	*//**
 	 * @return film si id correspond
 	 * @return null si inconnu
-	 */
+	 *//*
     @Override
     public Film consulterFilmParId(int id) {
 		return lstFilms.stream().filter(item -> item.getId() == id).findAny().orElse(null);
 	}
 
-	/*@Override
+	*//*@Override
     public List<Genre> consulterGenres() {
 		return lstGenres;
-	}*/
+	}*//*
 
 	@Override
     public List<Participant> consulterParticipants() {
 		return lstParticipants;
 	}
 
-	/*@Override
+	*//*@Override
     public Genre consulterGenreParId(long id) {
 		return lstGenres.stream().filter(item -> item.getId() == id).findAny().orElse(null);
-	}*/
+	}*//*
 
-	/**
+	*//**
 	 * @return participant si id correspond
 	 * @return null si inconnu
-	 */
+	 *//*
     @Override
     public Participant consulterParticipantParId(int id) {
 		return lstParticipants.stream().filter(item -> item.getId() == id).findAny().orElse(null);
@@ -69,10 +69,10 @@ public class FilmServiceBouchon implements FilmService {
 		lstFilms.add(film);
 	}
 
-	/**
+	*//**
 	 * Cette méthode permet de simuler le stockage en base de données et la remontée
 	 * d'information
-	 */
+	 *//*
 	public void simulationCoucheDALetDB() {
 		// Création de la liste des genres
 		for (int index = 0; index < genres.length; index++) {
@@ -136,4 +136,4 @@ public class FilmServiceBouchon implements FilmService {
 		Avis avis = new Avis(1, 4, "On rit du début à la fin", membre1);
 		bienvenueChezLesChtis.getAvis().add(avis);
 	}
-}
+}*/

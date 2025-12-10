@@ -1,13 +1,15 @@
 package fr.eni.tp.filmotheque.bll;
 
 import fr.eni.tp.filmotheque.bo.Film;
-import fr.eni.tp.filmotheque.bo.Participant;
 import fr.eni.tp.filmotheque.dal.FilmRepository;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Primary
 public class FilmServiceImpl  implements FilmService {
 
     //injecter la couche dal
@@ -24,22 +26,13 @@ public class FilmServiceImpl  implements FilmService {
     }
 
     @Override
-    public Film consulterFilmParId(int id) {
+    public Film consulterFilmParId(Integer id) {
        Film film = filmRepository.findFilmById(id);
        return film;
     }
 
     @Override
-    public List<Participant> consulterParticipants() {
-        return List.of();
-    }
-
-    @Override
-    public Participant consulterParticipantParId(int id) {
-        return null;
-    }
-
-    @Override
+    @Transactional
     public void creerFilm(Film film) {
         filmRepository.saveFilm(film);
     }

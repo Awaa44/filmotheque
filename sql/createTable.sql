@@ -37,3 +37,12 @@ alter table acteurs add constraint fk_acteurs_filmId foreign key(filmId)
     references films(id);
 alter table acteurs add constraint fk_acteurs_participantId foreign key (participantId)
     references participants(id);
+
+drop table Membres
+
+CREATE TABLE Membres(    id INT IDENTITY CONSTRAINT PK_Membres PRIMARY KEY,
+                         prenom VARCHAR(50) NOT NULL,
+                         nom VARCHAR(50) NOT NULL,
+                         pseudo VARCHAR(50) NOT NULL UNIQUE,
+                         motDePasse VARCHAR(50) NOT NULL,
+                         admin BIT NOT NULL default 0);

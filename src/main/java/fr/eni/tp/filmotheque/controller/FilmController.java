@@ -1,7 +1,10 @@
 package fr.eni.tp.filmotheque.controller;
 
 import fr.eni.tp.filmotheque.bll.FilmService;
+import fr.eni.tp.filmotheque.bll.GenreService;
+import fr.eni.tp.filmotheque.bll.ParticipantService;
 import fr.eni.tp.filmotheque.bo.Film;
+import fr.eni.tp.filmotheque.bo.Genre;
 import fr.eni.tp.filmotheque.bo.Participant;
 import fr.eni.tp.filmotheque.dto.FilmDto;
 import jakarta.validation.Valid;
@@ -26,11 +29,19 @@ public class FilmController {
     Logger logger = LoggerFactory.getLogger(FilmController.class);
 
     private FilmService filmService;
+    private ParticipantService participantService;
+    private GenreService genreService;
 
-    public FilmController(FilmService filmService) {
+    public FilmController(FilmService filmService, ParticipantService participantService, GenreService genreService) {
         this.filmService = filmService;
+        this.participantService = participantService;
+        this.genreService = genreService;
     }
 
+    @GetMapping({"/", "accueil"})
+    public String accueil() {
+        return "accueil";
+    }
 
     @GetMapping("/films/detail")
     public String afficherUnFilm(@RequestParam(name="id") int identifiant, Model model) {
@@ -45,7 +56,10 @@ public class FilmController {
 
     @GetMapping("/films")
     public String afficherFilms(Model model) {
-        logger.debug("debut afficherFilms - niveau debug");
+        logger.debug("debut afficherFilms -niveau debug");
+        logger.info("debut afficherFilms - niveau info");
+        logger.warn("debut afficherFilms - niveau warning");
+        logger.error("debut afficherFilms - niveau error");
 
         List<Film> films = this.filmService.consulterFilms();
         for (Film film : films) {
@@ -54,6 +68,7 @@ public class FilmController {
         }
 
         model.addAttribute("films", films);
+        logger.debug("fin afficherFilms - niveau debug");
 
         return "view-films";
     }
@@ -92,18 +107,19 @@ public class FilmController {
         //qui est dans Genre, donc on passe en paramère le genre choisi / La méthode cherche dans la liste
         // de tous les genres disponibles / Elle retourne le genre complet qui correspond à cet ID
 
-/*        Genre genre = filmService.consulterGenreParId(filmDto.getIdGenre());
-        film.setGenre(genre);*/
+        //associer le genre
+        Genre genre = genreService.findGenreById(filmDto.getIdGenre());
+        film.setGenre(genre);
 
         //associer le réalisteur
-        Participant participant = filmService.consulterParticipantParId(filmDto.getIdRealisateur());
-        film.setRealisateur(participant);
+        Participant realisateur = participantService.consulterParticipantById(filmDto.getIdRealisateur());
+        film.setRealisateur(realisateur);
 
         //gestion d'une liste d'acteur, donc il faut lier seulement les acteurs sélectionnés dans le html
         List<Participant> acteurs = new ArrayList<>();
         if(filmDto.getIdsActeurs() != null && !filmDto.getIdsActeurs().isEmpty()) {
             for (Integer idActeur : filmDto.getIdsActeurs()) {
-                Participant acteur = filmService.consulterParticipantParId(idActeur);
+                Participant acteur = participantService.consulterParticipantById(idActeur);
                 if(acteur != null) {
                     acteurs.add(acteur);
                 }

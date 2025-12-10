@@ -126,8 +126,6 @@ public class FilmRepositoryImpl implements FilmRepository {
 
 
 
-
-
     //construction du RowMapper pour afficher les films
     class FilmCompletRowMapper implements RowMapper<Film> {
 

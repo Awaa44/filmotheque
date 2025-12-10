@@ -73,7 +73,7 @@
                 <select id="inputRealisateur" th:field="*{idRealisateur}">
                     <option value="">-- Choisir un réalisateur --</option>
                     <!--ICI ON RECUPERE LES INFORMATIONS DIRECTEMENT DANS LE SERVICE AU LIEU DU CONTROLLER-->
-                    <option th:each="realisateur : ${@filmService.consulterParticipants()}"
+                    <option th:each="realisateur : ${@participantServiceImpl.consulterParticipants()}"
                             th:value="${realisateur.id}"
                             th:text="${realisateur.prenom + ' ' + realisateur.nom}">
                     </option>
@@ -84,7 +84,7 @@
                 <label for="idActeurs">Acteurs</label>
                 <!--AJOUTER LE FIELD idsActeurs (Lie le select à la liste d'IDs)-->
                 <select id="idActeurs" th:field = "*{idsActeurs}" multiple>
-                    <option th:each="acteur : ${@filmService.consulterParticipants()}"
+                    <option th:each="acteur : ${@participantServiceImpl.consulterParticipants()}"
                             th:value="${acteur.id}"
                             th:text="${acteur.prenom + ' ' + acteur.nom}"></option>
                 </select>
