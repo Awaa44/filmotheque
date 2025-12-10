@@ -10,7 +10,7 @@ public class Film implements Serializable {
 	 * Numéro de sérialisation
 	 */
 	private static final long serialVersionUID = 1L;
-	private long id;
+	private int id;
 	private String titre;
 	private int annee;
 	private int duree;
@@ -33,16 +33,16 @@ public class Film implements Serializable {
 		this.synopsis = synopsis;
 	}
 
-	public Film(long id, String titre, int annee, int duree, String synopsis) {
+	public Film(int id, String titre, int annee, int duree, String synopsis) {
 		this(titre, annee, duree, synopsis);
 		this.id = id;
 	}
 
-	public long getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 

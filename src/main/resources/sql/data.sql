@@ -1,3 +1,6 @@
+-- Nettoyer la table avant d'insérer
+DELETE FROM genres;
+
 -- Insérer des données de test
 INSERT INTO genres (id, libelle) VALUES (1, 'Animation');
 INSERT INTO genres (id, libelle) VALUES (2, 'Science-fiction');

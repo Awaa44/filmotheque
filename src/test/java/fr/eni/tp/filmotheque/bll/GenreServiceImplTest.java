@@ -1,4 +1,4 @@
-package fr.eni.tp.filmotheque.dal;
+package fr.eni.tp.filmotheque.bll;
 
 import fr.eni.tp.filmotheque.bo.Genre;
 import fr.eni.tp.filmotheque.exception.GenreNotFound;
@@ -12,26 +12,26 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-public class GenreRepositoryImplTest {
+public class GenreServiceImplTest {
 
     @Autowired
-    GenreRepository genreRepository;
+    GenreService genreService;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @BeforeAll
-    public static void beforeAll() {
+    public static void setUp() {
         System.out.println("Before All");
     }
 
     @AfterAll
-    public static void afterAll() {
+    public static void tearDown() {
         System.out.println("After All");
     }
 
     @BeforeEach
-    public void beforeEach() {
+    public void BeforeEachTest() {
         System.out.println("BeforeEach");
 /*        jdbcTemplate.update("delete from genres");
         jdbcTemplate.update("INSERT INTO genres (id, libelle) VALUES (1, 'Animation')");
@@ -42,32 +42,31 @@ public class GenreRepositoryImplTest {
         jdbcTemplate.update("INSERT INTO genres (id, libelle) VALUES (6, 'Drame')");*/
     }
 
-
     @Test
-    @DisplayName("test findAllGenres cas où il y plusieurs genres")
-    public void testFindAllGenresCasPlusieursGenres() {
+    @DisplayName("test findAllGenres cas où il y a plusieurs genres")
+    public void testFindAllGenres() {
         //AAA
         //Arrange
 
-        //Act : appel de la méthode findAll
-        List<Genre> genres = genreRepository.findAllGenres();
+        //Act
+        List<Genre> genres = genreService.findAllGenre();
 
         //Assert
         assertNotNull(genres);
         assertEquals(6, genres.size());
+
     }
 
     @Test
     @DisplayName("test pour trouver le genre par id")
-    public void testPourTrouverLeGenreParId() {
-        //AAA
+    public void testFindGenreById() {
         //Arrange
         int id = 1;
 
-        //Assert : fonction pour trouver le genre
-        Genre genre = genreRepository.findGenreById(id);
-
         //Act
+        Genre genre = genreService.findGenreById(id);
+
+        //act
         assertNotNull(genre);
         assertEquals(id, genre.getId());
         assertEquals("Animation", genre.getTitre());
@@ -75,42 +74,29 @@ public class GenreRepositoryImplTest {
     }
 
     @Test
-    @DisplayName("test pour le cas où le genre n'existe pas")
-    public void testPourLeGenreNExistePas() {
-        //AAA
+    @DisplayName("test pour le cas où l'id du genre n'existe pas")
+    public void testFindGenreByIdNotFound() {
         //Arrange
-        int id = 999;
+        int id = 8;
 
         //Act
-        assertThrows(GenreNotFound.class, () -> genreRepository.findGenreById(id));
+       assertThrows(GenreNotFound.class, () -> genreService.findGenreById(id));
     }
 
     @Test
-    @DisplayName("test pour ajouter un genre")
-    public void testPourAjouterUnGenre() {
-        //Arrange
-        Genre genre = new Genre(7,"Horreur");
+    @DisplayName("test pour ajouter un nouveau genre")
+    public void testAddGenre() {
+        //Arrante
+        Genre genre = new Genre(7, "horreur");
 
         //Act
-        Genre newGenre = genreRepository.saveGenre(genre);
+        Genre newGenre = genreService.saveGenre(genre);
 
-        //Assert
+        //Arrange
         assertNotNull(newGenre);
-        Genre genre2 = genreRepository.findGenreById(newGenre.getId());
-        assertEquals(genre2, newGenre);
+        assertEquals(genre.getId(), newGenre.getId());
+        assertEquals(genre, newGenre);
 
     }
-
-    @Test
-    @DisplayName("test pour modifier un genre")
-    public void testPourModifierUnGenre() {
-
-        Genre genre = new Genre(6,"Horreur");
-        genre = genreRepository.updateGenre(genre);
-
-        assertEquals("Horreur", genre.getTitre());
-    }
-
-
 
 }

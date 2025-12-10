@@ -2,10 +2,8 @@ package fr.eni.tp.filmotheque.dal;
 
 import fr.eni.tp.filmotheque.bo.Genre;
 import fr.eni.tp.filmotheque.exception.GenreNotFound;
-import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-
 import org.springframework.jdbc.core.PreparedStatementSetter;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -30,7 +28,7 @@ public class GenreRepositoryImpl implements GenreRepository {
     //fonction avec une liste, donc on utilise query et RowMapper
     @Override
     public List<Genre> findAllGenres() {
-        String sql = "SELECT id, libelle FROM genre";
+        String sql = "SELECT id, libelle FROM genres";
         List<Genre> genres = jdbcTemplate.query(sql, new GenreRowMapper());
         return genres;
     }
@@ -38,7 +36,7 @@ public class GenreRepositoryImpl implements GenreRepository {
     //fonction pour trouver 1 résulat, donc on utilise queryForObject
     @Override
     public Genre findGenreById(int id) {
-        String sql = "SELECT id, libelle FROM genre WHERE id = ?";
+        String sql = "SELECT id, libelle FROM genres WHERE id = ?";
 
         Genre genre = null;
 
@@ -55,11 +53,12 @@ public class GenreRepositoryImpl implements GenreRepository {
     //fonction pour créer un genre
     @Override
     public Genre saveGenre(Genre genre) {
-        String sql = "INSERT INTO genre (id, libelle) VALUES (?, ?)";
+        String sql = "INSERT INTO genres (id, libelle) VALUES (?, ?)";
 
         PreparedStatementSetter pss = new PreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps) throws SQLException {
+                //on indique setLong car configuré en long dans le BO
                 ps.setLong(1, genre.getId());
                 ps.setString(2, genre.getTitre());
             }
@@ -73,13 +72,15 @@ public class GenreRepositoryImpl implements GenreRepository {
     //fonction pour modifier un genre existant
     @Override
     public Genre updateGenre(Genre genre) {
-        String sql = "UPDATE genre SET libelle = ? WHERE id = ?";
+        String sql = "UPDATE genres SET libelle = ? WHERE id = ?";
 
         PreparedStatementSetter pss = new PreparedStatementSetter() {
             @Override
             public void setValues(PreparedStatement ps) throws SQLException {
-                ps.setLong(1, genre.getId());
+                //Attention à mettre titre en 1er car c'est le libellé qui est en 1er dans la requete SQL
                 ps.setString(1, genre.getTitre());
+                ps.setLong(2, genre.getId());
+
             }
         };
         jdbcTemplate.update(sql, pss);
@@ -95,9 +96,8 @@ public class GenreRepositoryImpl implements GenreRepository {
         @Override
         public Genre mapRow(ResultSet rs, int rowNum) throws SQLException{
             Genre genre = new Genre();
+            //ici on indique int pour le SQL au lieu de long dans le BO
             genre.setId(rs.getInt("id"));
-            //on peut gérer directement le changement de int vers long
-            //genre.setId(Long.parseLong(String.valueOf(rs.getInt("id"))));
             genre.setTitre(rs.getString("libelle"));
             return genre;
         }

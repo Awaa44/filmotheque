@@ -18,7 +18,7 @@ public class Membre extends Personne {
 		this.motDePasse = motDePasse;
 	}
 
-	public Membre(long id, String nom, String prenom, String pseudo, String motDePasse) {
+	public Membre(int id, String nom, String prenom, String pseudo, String motDePasse) {
 		super(id, nom, prenom);
 		this.pseudo = pseudo;
 		this.motDePasse = motDePasse;
