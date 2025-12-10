@@ -95,19 +95,19 @@ public class FilmDto {
         this.synopsis = synopsis;
     }
 
-    public int getIdGenre() {
+    public Integer getIdGenre() {
         return idGenre;
     }
 
-    public void setIdGenre(int idGenre) {
+    public void setIdGenre(Integer idGenre) {
         this.idGenre = idGenre;
     }
 
-    public int getIdRealisateur() {
+    public Integer getIdRealisateur() {
         return idRealisateur;
     }
 
-    public void setIdRealisateur(int idRealisateur) {
+    public void setIdRealisateur(Integer idRealisateur) {
         this.idRealisateur = idRealisateur;
     }
 

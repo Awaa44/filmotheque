@@ -5,6 +5,8 @@ import fr.eni.tp.filmotheque.bo.Film;
 import fr.eni.tp.filmotheque.bo.Participant;
 import fr.eni.tp.filmotheque.dto.FilmDto;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +22,8 @@ import java.util.List;
 
 @Controller
 public class FilmController {
+
+    Logger logger = LoggerFactory.getLogger(FilmController.class);
 
     private FilmService filmService;
 
@@ -41,10 +45,12 @@ public class FilmController {
 
     @GetMapping("/films")
     public String afficherFilms(Model model) {
+        logger.debug("debut afficherFilms - niveau debug");
 
         List<Film> films = this.filmService.consulterFilms();
         for (Film film : films) {
-            System.out.println(film);
+            //System.out.println(film);
+            logger.info("film : {}", film);
         }
 
         model.addAttribute("films", films);

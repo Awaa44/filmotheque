@@ -21,17 +21,17 @@ public class Genre implements Serializable {
 		this.titre = titre;
 	}
 
-	public Genre(int id, String titre) {
+	public Genre(Integer id, String titre) {
 		this.id = id;
 		this.titre = titre;
 	}
 	
 	//Getter + Setter
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

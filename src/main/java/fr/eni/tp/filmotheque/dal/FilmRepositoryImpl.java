@@ -7,6 +7,10 @@ import fr.eni.tp.filmotheque.exception.FilmNotFound;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
@@ -17,10 +21,13 @@ import java.util.List;
 public class FilmRepositoryImpl implements FilmRepository {
 
     //injection d'un jdbcTemplate avec constructeur
-    private final JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public FilmRepositoryImpl(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+
+    public FilmRepositoryImpl( NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+        this.jdbcTemplate =namedParameterJdbcTemplate.getJdbcTemplate();
     }
 
 
@@ -72,8 +79,38 @@ public class FilmRepositoryImpl implements FilmRepository {
     }
 
     @Override
-    public Film saveFilm(Film film) {
-        return null;
+    public void saveFilm(Film film) {
+        String sql = "insert into films (titre, annee, duree, synopsis, genreid, realisateurid) "
+                + " values (:titre, :annee_sortie, :duree, :synopsis, :genre_id, :realisateur_id)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        MapSqlParameterSource parameters = new MapSqlParameterSource();
+        parameters.addValue("titre", film.getTitre());
+        parameters.addValue("annee_sortie", film.getAnnee());
+        parameters.addValue("duree", film.getDuree());
+        parameters.addValue("synopsis", film.getSynopsis());
+        parameters.addValue("genre_id", film.getGenre().getId());
+        parameters.addValue("realisateur_id", film.getRealisateur().getId());
+
+        namedParameterJdbcTemplate.update(sql, parameters, keyHolder ,new String[] { "id"} );
+
+        film.setId(keyHolder.getKey().intValue());
+
+        if(film.getActeurs().size()>0) {
+            sql = "insert into acteurs (filmid, participantid) values (:film_id, :participant_id)";
+
+            MapSqlParameterSource[] acteursParameters = new MapSqlParameterSource[film.getActeurs().size()];
+            for(int i=0;i<film.getActeurs().size();i++) {
+                acteursParameters[i]=new MapSqlParameterSource();
+                acteursParameters[i].addValue("film_id", film.getId());
+                acteursParameters[i].addValue("participant_id", film.getActeurs().get(i).getId());
+            }
+
+            namedParameterJdbcTemplate.batchUpdate(sql, acteursParameters);
+
+        }
+
+
     }
 
 

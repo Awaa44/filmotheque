@@ -62,7 +62,7 @@
                 <select id="inputGenre" th:field="*{idGenre}">
                     <option value="">-- Choisir un genre --</option>
                     <!--ICI ON RECUPERE LES INFORMATIONS DIRECTEMENT DANS LE SERVICE AU LIEU DU CONTROLLER-->
-                    <option th:each="genre : ${@filmService.consulterGenres()}"
+                    <option th:each="genre : ${@genreServiceImpl.findAllGenre()}"
                             th:value="${genre.id}"
                             th:text="${genre.titre}">
                     </option>
