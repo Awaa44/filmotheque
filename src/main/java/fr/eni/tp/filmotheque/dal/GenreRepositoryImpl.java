@@ -59,7 +59,7 @@ public class GenreRepositoryImpl implements GenreRepository {
             @Override
             public void setValues(PreparedStatement ps) throws SQLException {
                 //on indique setLong car configuré en long dans le BO
-                ps.setLong(1, genre.getId());
+                ps.setInt(1, genre.getId());
                 ps.setString(2, genre.getTitre());
             }
         };

@@ -8,16 +8,7 @@
     <link rel="icon" data-th-href="@{/images/logoENI.png}">
 </head>
 <body>
-<header>
-    <h1 id="nav-title">
-        <a th:href="@{/}">Filmothèque</a>
-    </h1>
-    <nav>
-        <ul>
-            <li><a th:href="@{/films}">Films</a></li>
-            <li><a th:href="@{/films/creer}">Creer</a></li>
-        </ul>
-    </nav>
+<header th:replace="~{/fragments/fragment-entete :: frag-entete}">
 </header>
 
 <main class="center-main">

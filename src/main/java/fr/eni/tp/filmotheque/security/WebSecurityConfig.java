@@ -3,7 +3,6 @@ package fr.eni.tp.filmotheque.security;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
@@ -18,11 +17,17 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/", "/accueil", "/css/*", "/images/*").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/films/creer").hasRole("ADMIN")
+                        .requestMatchers("/", "/accueil", "/css/*", "/images/*",
+                                "/films/detail", "/films", "/films/inscription", "/films/login").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/films/creer").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/films/inscription").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/films/inscription").permitAll()
                         .anyRequest().authenticated()
                 )
-                .formLogin(Customizer.withDefaults())
+                .formLogin(form -> form
+                        .loginPage("/films/login")
+                        .loginProcessingUrl("/films/login")
+                        .permitAll())
                 .logout((logout) -> logout.permitAll());
 
         return http.build();
@@ -32,5 +37,4 @@ public class WebSecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
-
 }

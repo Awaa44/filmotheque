@@ -1,31 +1,46 @@
 package fr.eni.tp.filmotheque.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import fr.eni.tp.filmotheque.bo.Membre;
+import fr.eni.tp.filmotheque.dal.MembreRepository;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class FilmothequeUserDetailService implements UserDetailsService {
 
-    @Autowired
-    PasswordEncoder passwordEncoder;
+    private final MembreRepository membreRepository;
+
+    public FilmothequeUserDetailService(MembreRepository membreRepository) {
+        this.membreRepository = membreRepository;
+    }
 
     @Override
-    /* Cette méthode est appelée par Spring à chaque fois qu'un utilise essaye de se connecter */
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Membre membre = membreRepository.findMembreByPseudo(username);
 
-        if(!"bob".equals(username)) {
-            throw new UsernameNotFoundException("Invalid username or password.");
+        if (membre == null) {
+            // pour créer un utilisateur en dur
+            if ("bob".equals(username)) {
+                return User.builder()
+                        .username("bob")
+                        .password("azerty")
+                        .roles("ADMIN")
+                        .build();
+            }
+
+            throw new UsernameNotFoundException("Utilisateur ou mot de passe n'existe pas");
         }
-        User.UserBuilder builder = User.withUsername(username)
-                .password(passwordEncoder.encode("azerty"))
-                //.password("{bcrypt}$2a$10$AkOvi4sSEucJFfQJyWLkb.mJ3DgTy2qmvLVeE486SoJ7ET3B7laNy")
-                .roles("ADMIN");
 
-        return builder.build();
+        // Utilisateur trouvé en base
+        return User.builder()
+                .username(membre.getPseudo())
+                .password(membre.getMotDePasse()) // mot de passe hashé de la base
+                .roles(membre.isAdmin() ? "ADMIN" : "USER")
+                .build();
     }
 }
+
+

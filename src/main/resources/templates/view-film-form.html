@@ -9,21 +9,16 @@
 </head>
 <body>
 <!-- Navbar -->
-<header>
-    <h1 id="nav-title">
-        <a th:href="@{/}">Filmothèque</a>
-    </h1>
-    <nav>
-        <ul>
-            <li><a th:href="@{/films}">Films</a></li>
-            <li><a th:href="@{/films/creer}">Creer</a></li>
-        </ul>
-    </nav>
+<header th:replace="~{/fragments/fragment-entete :: frag-entete}">
 </header>
 <main>
 
     <form action="/films/creer" method="post" th:object="${film}">
         <h1>Création d'un film [En cours de construction]</h1>
+
+        <!-- ✅✅✅ AJOUTER CETTE LIGNE ICI ✅✅✅ -->
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+        <!-- ✅✅✅ FIN DE L'AJOUT ✅✅✅ -->
 
         <div style="color: red;" th:if="${#fields.hasErrors('*')}" >
             <p th:text="#{index.erreurs}">Message d'erreur</p>

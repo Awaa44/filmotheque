@@ -9,16 +9,7 @@
 </head>
 <body>
 	<!-- Navbar -->
-    <header>
-        <h1 id="nav-title">
-            <a th:href="@{/}">Filmothèque</a>
-        </h1>
-        <nav>
-            <ul>
-                <li><a th:href="@{/films}">Films</a></li>
-                <li><a th:href="@{/films/creer}">Creer</a></li>
-            </ul>
-        </nav>
+    <header th:replace="~{/fragments/fragment-entete :: frag-entete}">
     </header>
 	<main>
 		<h1>Les films de l'ENI</h1>

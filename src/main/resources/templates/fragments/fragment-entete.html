@@ -1,0 +1,13 @@
+<header th:fragment="frag-entete">
+    <h1 id="nav-title">
+        <a th:href="@{/}">Filmothèque</a>
+    </h1>
+    <nav>
+        <ul>
+            <li><a th:href="@{/films}">Films</a></li>
+            <li><a th:href="@{/films/creer}">Creer</a></li>
+            <li><a th:href="@{/films/login}">Login</a></li>
+            <li><a th:href="@{/films/inscription}">Inscription</a></li>
+        </ul>
+    </nav>
+</header>

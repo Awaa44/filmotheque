@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TP ENI</title>
+    <link rel="stylesheet" th:href="@{/css/general.css}">
+    <link rel="stylesheet" th:href="@{/css/tp-form.css}">
+    <link rel="icon" th:href="@{/images/logoENI.png}">
+</head>
+<body>
+    <!-- Navbar -->
+    <header th:replace="~{/fragments/fragment-entete :: frag-entete}">
+    </header>
+    <main>
+        <form action="/films/inscription" method="post" th:object="${membre}">
+            <h1>Inscription</h1>
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+            <div style="color: red;" th:if="${#fields.hasErrors('*')}" >
+                <p th:text="#{index.erreurs}">Message d'erreur</p>
+            </div>
+
+            <ul class="flex-outer">
+                <li>
+                    <label for="nom">Nom : </label>
+                    <input type="text" id="nom" th:field="*{nom}">
+                </li>
+                <span style="color: red;" th:if="${#fields.hasErrors('nom')}">
+		        <li th:each="erreur: ${#fields.errors('nom')}" th:text="${erreur}"></li>
+	            </span>
+                <li>
+                    <label for="prenom">Prénom : </label>
+                    <input type="text" id="prenom" th:field="*{prenom}">
+                </li>
+                <span style="color: red;" th:if="${#fields.hasErrors('prenom')}">
+		        <li th:each="erreur: ${#fields.errors('prenom')}" th:text="${erreur}"></li>
+	            </span>
+                <li>
+                    <label for="pseudo">Pseudo : </label>
+                    <input type="text" id="pseudo" th:field="*{pseudo}">
+                </li>
+                <span style="color: red;" th:if="${#fields.hasErrors('pseudo')}">
+		        <li th:each="erreur: ${#fields.errors('pseudo')}" th:text="${erreur}"></li>
+	            </span>
+                <li>
+                    <label for="password">Mot de passe : </label>
+                    <input type="password" id="password" th:field="*{motDePasse}">
+                </li>
+                <span style="color: red;" th:if="${#fields.hasErrors('motDePasse')}">
+		        <li th:each="erreur: ${#fields.errors('motDePasse')}" th:text="${erreur}"></li>
+	            </span>
+            </ul>
+            <button type="submit">Valider</button>
+        </form>
+    </main>
+</body>
+</html>

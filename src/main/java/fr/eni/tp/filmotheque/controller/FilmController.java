@@ -2,11 +2,13 @@ package fr.eni.tp.filmotheque.controller;
 
 import fr.eni.tp.filmotheque.bll.FilmService;
 import fr.eni.tp.filmotheque.bll.GenreService;
+import fr.eni.tp.filmotheque.bll.MembreService;
 import fr.eni.tp.filmotheque.bll.ParticipantService;
 import fr.eni.tp.filmotheque.bo.Film;
 import fr.eni.tp.filmotheque.bo.Genre;
 import fr.eni.tp.filmotheque.bo.Participant;
 import fr.eni.tp.filmotheque.dto.FilmDto;
+import fr.eni.tp.filmotheque.dto.MembreInscriptionDto;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,16 +33,57 @@ public class FilmController {
     private FilmService filmService;
     private ParticipantService participantService;
     private GenreService genreService;
+    private MembreService membreService;
 
-    public FilmController(FilmService filmService, ParticipantService participantService, GenreService genreService) {
+    public FilmController(FilmService filmService, ParticipantService participantService, GenreService genreService,
+                          MembreService membreService) {
         this.filmService = filmService;
         this.participantService = participantService;
         this.genreService = genreService;
+        this.membreService = membreService;
     }
 
     @GetMapping({"/", "accueil"})
     public String accueil() {
         return "accueil";
+    }
+
+    @GetMapping("/films/inscription")
+    public String inscriptionMembre(Model model) {
+        if (!model.containsAttribute("membre")) {
+            model.addAttribute("membre", new MembreInscriptionDto());
+        }
+        return "view-inscription";
+    }
+
+    @PostMapping("/films/inscription")
+    public String inscriptionMembre(@Valid @ModelAttribute("membre") MembreInscriptionDto membreDto,
+        BindingResult resultat, Model model, RedirectAttributes redirectAttr){
+
+        //vérifier les erreurs de validation
+        if(resultat.hasErrors()){
+            redirectAttr.addFlashAttribute( "org.springframework.validation.BindingResult.membre", resultat);
+            redirectAttr.addFlashAttribute("membre", membreDto);
+            return "redirect:/films/inscription";
+        }
+
+        //véfirifier que le pseudo n'existe pas
+        if(membreService.existsMembreByPseudo(membreDto.getPseudo())){
+            redirectAttr.addFlashAttribute( "erreur", "Ce pseudo est déjà utilisé");
+            redirectAttr.addFlashAttribute("membre", membreDto);
+            return "redirect:/films/inscription";
+        }
+
+        //inscire le membre
+        membreService.inscrireMembre(membreDto);
+
+        redirectAttr.addFlashAttribute("success", "Inscription réussie");
+        return "redirect:/films/login";
+    }
+
+    @GetMapping("films/login")
+    public String connectionMembre(){
+        return "view-login";
     }
 
     @GetMapping("/films/detail")
