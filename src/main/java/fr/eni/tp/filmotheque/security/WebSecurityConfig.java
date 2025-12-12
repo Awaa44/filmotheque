@@ -26,9 +26,15 @@ public class WebSecurityConfig {
                 )
                 .formLogin(form -> form
                         .loginPage("/films/login")
+                        .defaultSuccessUrl("/accueil", false)
                         .loginProcessingUrl("/films/login")
                         .permitAll())
-                .logout((logout) -> logout.permitAll());
+                .logout((logout) -> logout
+                        .clearAuthentication(true)
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
+                        .logoutSuccessUrl("/accueil")
+                        .permitAll());
 
         return http.build();
     }

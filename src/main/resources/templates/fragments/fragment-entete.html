@@ -1,14 +1,27 @@
-<header th:fragment="frag-entete">
+<header th:fragment="frag-entete" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
     <h1 id="nav-title">
         <a th:href="@{/}">Filmothèque</a>
     </h1>
     <nav>
         <ul>
+            <!--Toujours visible-->
             <li><a th:href="@{/films}">Films</a></li>
+
+            <li sec:authorize="isAuthenticated()">
             <li><a th:href="@{/films/creer}">Creer</a></li>
+
+            <!-- Visible seulement si NON connecté -->
+            <li sec:authorize="!isAuthenticated()">
             <li><a th:href="@{/films/inscription}">Inscription</a></li>
+
+            <li sec:authorize="!isAuthenticated()">
             <li><a th:href="@{/films/login}">Login</a></li>
-            <li>
+
+            <!-- Visible seulement si CONNECTÉ -->
+            <li sec:authorize="isAuthenticated()">
+                <span>Bonjour <strong sec:authentication="name">Utilisateur</strong></span>
+            </li>
+            <li sec:authorize="isAuthenticated()">
                 <form th:action="@{/logout}" method="post" style="display: inline;">
                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                     <button type="submit" style="background: none; border: none; color: inherit;
@@ -16,7 +29,7 @@
                     </button>
                 </form>
             </li>
-
         </ul>
     </nav>
 </header>
+

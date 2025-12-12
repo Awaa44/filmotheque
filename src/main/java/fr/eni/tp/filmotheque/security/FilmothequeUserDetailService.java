@@ -19,6 +19,7 @@ public class FilmothequeUserDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        //charger l'utilisateur depuis la base de données
         Membre membre = membreRepository.findMembreByPseudo(username);
 
         if (membre == null) {

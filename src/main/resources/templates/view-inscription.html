@@ -12,6 +12,17 @@
     <header th:replace="~{/fragments/fragment-entete :: frag-entete}">
     </header>
     <main>
+
+        <!--Message erreur pseudo déjà utilisé à l'utilisateur-->
+        <div th:if="${erreurInscription}" style="color: red; background: #ffe6e6; padding: 10px; margin: 10px 0;">
+            <span th:text="${erreurInscription}"></span>
+        </div>
+
+        <!--Message erreur d'inscription à l'utilisateur-->
+        <div th:if="${error}" style="color: red; background: #ffe6e6; padding: 10px; margin: 10px 0;">
+            <span th:text="${error}"></span>
+        </div>
+
         <form action="/films/inscription" method="post" th:object="${membre}">
             <h1>Inscription</h1>
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />

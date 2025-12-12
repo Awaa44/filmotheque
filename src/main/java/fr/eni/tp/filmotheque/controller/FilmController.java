@@ -58,13 +58,14 @@ public class FilmController {
 
     @PostMapping("/films/inscription")
     public String inscriptionMembre(@Valid @ModelAttribute("membre") MembreInscriptionDto membreDto,
-                                    BindingResult resultat, Model model, RedirectAttributes redirectAttr) {
+                                    BindingResult resultat, RedirectAttributes redirectAttr) {
 
         logger.info("Tentative inscription membre : {}", membreDto.getPseudo());
 
         //vérifier les erreurs de validation
         if (resultat.hasErrors()) {
             logger.warn("Erreur d'inscription membre : {}", membreDto.getPseudo());
+            redirectAttr.addFlashAttribute("org.springframework.validation.BindingResult.membre", resultat);
             redirectAttr.addFlashAttribute("org.springframework.validation.BindingResult.membre", resultat);
             redirectAttr.addFlashAttribute("membre", membreDto);
             return "redirect:/films/inscription";
@@ -82,7 +83,7 @@ public class FilmController {
             membreService.inscrireMembre(membreDto);
             logger.info("Membre créé avec succès : {}", membreDto.getPseudo());
             //message pour l'utilisateur dans le HTML
-            redirectAttr.addFlashAttribute("success", "Inscription réussie");
+            redirectAttr.addFlashAttribute("success", "Inscription réussie, vous pouvez vous connecter");
             return "redirect:/films/login";
 
         } catch (Exception e) {
