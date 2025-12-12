@@ -28,7 +28,7 @@ import java.util.List;
 @Controller
 public class FilmController {
 
-    Logger logger = LoggerFactory.getLogger(FilmController.class);
+    private final Logger logger = LoggerFactory.getLogger(FilmController.class);
 
     private FilmService filmService;
     private ParticipantService participantService;
@@ -58,36 +58,50 @@ public class FilmController {
 
     @PostMapping("/films/inscription")
     public String inscriptionMembre(@Valid @ModelAttribute("membre") MembreInscriptionDto membreDto,
-        BindingResult resultat, Model model, RedirectAttributes redirectAttr){
+                                    BindingResult resultat, Model model, RedirectAttributes redirectAttr) {
+
+        logger.info("Tentative inscription membre : {}", membreDto.getPseudo());
 
         //vérifier les erreurs de validation
-        if(resultat.hasErrors()){
-            redirectAttr.addFlashAttribute( "org.springframework.validation.BindingResult.membre", resultat);
+        if (resultat.hasErrors()) {
+            logger.warn("Erreur d'inscription membre : {}", membreDto.getPseudo());
+            redirectAttr.addFlashAttribute("org.springframework.validation.BindingResult.membre", resultat);
             redirectAttr.addFlashAttribute("membre", membreDto);
             return "redirect:/films/inscription";
         }
 
         //véfirifier que le pseudo n'existe pas
-        if(membreService.existsMembreByPseudo(membreDto.getPseudo())){
-            redirectAttr.addFlashAttribute( "erreur", "Ce pseudo est déjà utilisé");
+        if (membreService.existsMembreByPseudo(membreDto.getPseudo())) {
+            redirectAttr.addFlashAttribute("erreurInscription", "Ce pseudo est déjà utilisé");
             redirectAttr.addFlashAttribute("membre", membreDto);
             return "redirect:/films/inscription";
         }
 
         //inscire le membre
-        membreService.inscrireMembre(membreDto);
+        try {
+            membreService.inscrireMembre(membreDto);
+            logger.info("Membre créé avec succès : {}", membreDto.getPseudo());
+            //message pour l'utilisateur dans le HTML
+            redirectAttr.addFlashAttribute("success", "Inscription réussie");
+            return "redirect:/films/login";
 
-        redirectAttr.addFlashAttribute("success", "Inscription réussie");
-        return "redirect:/films/login";
+        } catch (Exception e) {
+            logger.error("Erreur d'inscription membre :{}", membreDto.getPseudo(), e);
+            //en cas d'erreur envoyer un message à l'utilisateur
+            redirectAttr.addFlashAttribute("error", "Inscription échouée");
+            redirectAttr.addFlashAttribute("membre", membreDto);
+
+            return "redirect:/films/inscription";
+        }
     }
 
     @GetMapping("films/login")
-    public String connectionMembre(){
+    public String connectionMembre() {
         return "view-login";
     }
 
     @GetMapping("/films/detail")
-    public String afficherUnFilm(@RequestParam(name="id") int identifiant, Model model) {
+    public String afficherUnFilm(@RequestParam(name = "id") int identifiant, Model model) {
 
         Film film = this.filmService.consulterFilmParId(identifiant);
         System.out.println(film);
@@ -128,55 +142,78 @@ public class FilmController {
 
     @PostMapping("/films/creer")
     //ne pas oublier @Valid devant @ModelAttribute sinon les erreurs ne s'affichent pas
-    public String creerFilm(@Valid @ModelAttribute("film") FilmDto filmDto, BindingResult resultat, Model model,
+    public String creerFilm(@Valid @ModelAttribute("film") FilmDto filmDto, BindingResult resultat,
                             RedirectAttributes redirectAttr) {
 
-        //vérifier les erreurs avant de copier dans le BO
-        if(resultat.hasErrors()) {
+        //log d'information
+        logger.info("Tentative de création de film :{}", filmDto.getTitre());
 
-            redirectAttr.addFlashAttribute( "org.springframework.validation.BindingResult.film", resultat);
+        //vérifier les erreurs avant de copier dans le BO
+        if (resultat.hasErrors()) {
+            logger.warn("Erreurs de validation pour le film : {}", filmDto.getTitre());
+            // ✅ Sauvegarder les erreurs
+            redirectAttr.addFlashAttribute("org.springframework.validation.BindingResult.film", resultat);
+            // ✅ Sauvegarder les données saisies
             //attention a bien mettre filmDto et non film
             redirectAttr.addFlashAttribute("film", filmDto);
+
             return "redirect:/films/creer";
         }
 
-        //on créé une nouvelle instance film avec le BO Film
-        Film film = new Film();
-        //pour ensuite copier les données de l'objet DTO dans l'objet BO film
-        BeanUtils.copyProperties(filmDto, film);
+        //try catch
+        try {
+            //CONVERSION DTO => BO
+            //on créé une nouvelle instance film avec le BO Film
+            Film film = new Film();
+            //pour ensuite copier les données de l'objet DTO dans l'objet BO film
+            BeanUtils.copyProperties(filmDto, film);
 
-        // Copier manuellement le genre (noms différents)
-        //on ne peut pas utiliser BeanUtils car le nom de l'attribut dans le DTO est différent de celui
-        //qui est dans Genre, donc on passe en paramère le genre choisi / La méthode cherche dans la liste
-        // de tous les genres disponibles / Elle retourne le genre complet qui correspond à cet ID
+            //associer le genre
+            if (filmDto.getIdGenre() != null) {
+                Genre genre = genreService.findGenreById(filmDto.getIdGenre());
+                film.setGenre(genre);
+            }
 
-        //associer le genre
-        Genre genre = genreService.findGenreById(filmDto.getIdGenre());
-        film.setGenre(genre);
+            //associer le réalisteur
+            if (filmDto.getIdRealisateur() != null) {
+                Participant realisateur = participantService.consulterParticipantById(filmDto.getIdRealisateur());
+                film.setRealisateur(realisateur);
+            }
 
-        //associer le réalisteur
-        Participant realisateur = participantService.consulterParticipantById(filmDto.getIdRealisateur());
-        film.setRealisateur(realisateur);
-
-        //gestion d'une liste d'acteur, donc il faut lier seulement les acteurs sélectionnés dans le html
-        List<Participant> acteurs = new ArrayList<>();
-        if(filmDto.getIdsActeurs() != null && !filmDto.getIdsActeurs().isEmpty()) {
-            for (Integer idActeur : filmDto.getIdsActeurs()) {
-                Participant acteur = participantService.consulterParticipantById(idActeur);
-                if(acteur != null) {
-                    acteurs.add(acteur);
+            //associer les acteurs
+            //gestion d'une liste d'acteur, donc il faut lier seulement les acteurs sélectionnés dans le html
+            List<Participant> acteurs = new ArrayList<>();
+            if (filmDto.getIdsActeurs() != null && !filmDto.getIdsActeurs().isEmpty()) {
+                for (Integer idActeur : filmDto.getIdsActeurs()) {
+                    Participant acteur = participantService.consulterParticipantById(idActeur);
+                    if (acteur != null) {
+                        acteurs.add(acteur);
+                    }
                 }
             }
+            film.setActeurs(acteurs);
+
+            //CREER LE FILM
+            //ensuite on crée le film avec la fonction creerFilm de l'impl dans le BO film
+            this.filmService.creerFilm(film);
+            logger.info("Film : {}", film.getTitre());
+            //ne sert à rien car le model est perdu avec la redirection
+            //model.addAttribute("film", film);
+
+            return "redirect:/films/detail?id=" + film.getId();
+        } catch (Exception ex) {
+            //message pour le dev en console
+            logger.error("Erreur lors de la création du film", ex);
+            //message pour l'utilisateur, affichage en html
+            //En cas d'erreur, renvoyer vers le formulaire avec message = message d'erreur système dans le html
+            redirectAttr.addFlashAttribute("erreur", "Erreur lors de la création du film");
+            //Préserve les données saisies par l'utilisateur pour qu'il ne perde pas son travail
+            redirectAttr.addFlashAttribute("film", filmDto);
+
+            return "redirect:/films/creer";
         }
-        film.setActeurs(acteurs);
-
-        //ensuite on crée le film avec la fonction creerFilm de l'impl dans le BO film
-        this.filmService.creerFilm(film);
-        //ne sert à rien car le model est perdu avec la redirection
-        //model.addAttribute("film", film);
-
-        return "redirect:/films/detail?id=" + film.getId();
     }
+}
 
     //POSSIBLE DE METTRE @ApplicationScope ici pour remplacer la session par application pour les données stable
     //identique à aller chercher directement service dans le html pour genre
@@ -190,4 +227,4 @@ public class FilmController {
         System.out.println("Chargement en Session - GENRES");
         return filmService.consulterGenres();
     }*/
-}
+

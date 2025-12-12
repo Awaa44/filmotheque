@@ -4,4 +4,8 @@ public class MembreNotFound extends RuntimeException {
     public MembreNotFound(String message) {
         super(message);
     }
+
+    public MembreNotFound(){
+        super("Membre introuvable");
+    }
 }

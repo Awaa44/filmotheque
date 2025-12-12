@@ -19,7 +19,7 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/", "/accueil", "/css/*", "/images/*",
                                 "/films/detail", "/films", "/films/inscription", "/films/login").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/films/creer").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/films/creer").hasAnyRole("USER", "ADMIN")
                         .requestMatchers(HttpMethod.GET, "/films/inscription").permitAll()
                         .requestMatchers(HttpMethod.POST, "/films/inscription").permitAll()
                         .anyRequest().authenticated()

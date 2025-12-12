@@ -12,6 +12,10 @@
 <header th:replace="~{/fragments/fragment-entete :: frag-entete}">
 </header>
 <main>
+    <!-- Message d'erreur système mis dans le controller -->
+    <div th:if="${erreur}" style="color: red; background: #ffe6e6; padding: 10px; margin: 10px 0;">
+        <span th:text="${erreur}"></span>
+    </div>
 
     <form action="/films/creer" method="post" th:object="${film}">
         <h1>Création d'un film [En cours de construction]</h1>

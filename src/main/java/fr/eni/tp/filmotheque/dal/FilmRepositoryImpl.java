@@ -107,12 +107,8 @@ public class FilmRepositoryImpl implements FilmRepository {
             }
 
             namedParameterJdbcTemplate.batchUpdate(sql, acteursParameters);
-
         }
-
-
     }
-
 
     //méthode privée pour trouver la liste des acteurs
     private List<Participant> findActeursByFilmId(int filmId) {
@@ -123,8 +119,6 @@ public class FilmRepositoryImpl implements FilmRepository {
 
         return jdbcTemplate.query(sql, new ParticipantRowMapper(), filmId);
     }
-
-
 
     //construction du RowMapper pour afficher les films
     class FilmCompletRowMapper implements RowMapper<Film> {
@@ -167,7 +161,4 @@ public class FilmRepositoryImpl implements FilmRepository {
 
         }
     }
-
-
-
 }
